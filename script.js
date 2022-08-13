@@ -1,5 +1,17 @@
 const config = {
-    loginPage : document.getElementById("loginPage")
+    loginPage : document.getElementById("loginPage"),
+    mainPage : document.getElementById("mainPage"),
+    purchasePage : document.getElementById("purchasePage")
+}
+
+class PlayerInfo{
+    constructor(playerName, age, days, money, clicking){
+        this.playerName = playerName;
+        this.age = age;
+        this.days = days;
+        this.money = money;
+        this.clicking = clicking; //クリック回数
+    }
 }
 
 function makingBtns(btn1, btn2){
@@ -17,4 +29,10 @@ function makingBtns(btn1, btn2){
     return container
 }
 
-document.getElementById("loginBox").append(makingBtns("New","Login"));
+function loadPlayerInfo(){
+
+}
+
+function drawingMainPage(){
+
+}
