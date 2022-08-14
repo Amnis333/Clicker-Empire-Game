@@ -57,20 +57,20 @@ function drawingMainPage(player){
         <div class="bg-light col-md-10 d-flex">
             <div class="col-md-5">
                 <div id="burgerClick" class="text-center">
-                    <p>${player.clicking} Burgers</p>
-                    <p>One click $25</p>
-                    
+                    <h5>${player.clicking} Burgers</h5>
+                    <h5>One click $25</h5>
+                    <img src="./burger.png" class="burgerImg">
                 </div>    
             </div>
             <div class="col-md-7 bg-danger">
                 <div>
                     <div class="d-flex text-center">
-                        <p class="col-md-6">${player.playerName}</p>
-                        <p class="col-md-6">${player.age} years old</p>
+                        <h5 class="col-md-6">${player.playerName}</h5>
+                        <h5 class="col-md-6">${player.age} years old</h5>
                     </div>
                     <div class="d-flex text-center">
-                        <p class="col-md-6">${player.days} days</p>
-                        <p class="col-md-6">$${player.money}</p>
+                        <h5 class="col-md-6">${player.days} days</h5>
+                        <h5 class="col-md-6">$${player.money}</h5>
                     </div>
                 </div>
             </div>
