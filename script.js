@@ -13,16 +13,21 @@ class PlayerInfo{
         this.money = money;
         this.clicking = clicking; //クリック回数
     }
+
+    clickBurger(){
+        this.clicking += 1;
+        return this.clicking;
+    }
 }
 
 function backPurchaseBtns(back, purchase){
     let container = document.createElement("div");
     container.innerHTML = `
     <div class="d-flex col-12 justify-content-between">
-        <div class="col-6">
-            <button class="btn btn-primary btn-1">${back}</button>
+        <div class="col-6 d-flex justify-content-center">
+            <button class="btn btn-primary btn-1 ">${back}</button>
         </div>
-        <div class="col-6 ">
+        <div class="col-6 d-flex justify-content-center">
             <button class="btn btn-primary btn-2">${purchase}</button>
         </div>
     </div>
@@ -47,19 +52,19 @@ function initializePlayerInfo(){
     )
     console.log(player);
     config.loginPage.classList.add("d-none");
-    config.mainPage.append(drawingMainPage(player));
+    config.mainPage.append(drawMainPage(player));
 }
 
-function drawingMainPage(player){
+function drawMainPage(player){
     let container = document.createElement("div");
     container.innerHTML = `
     <div class="vh-100 d-flex justify-content-center container">
         <div class="bg-light col-md-10 d-flex">
-            <div class="col-md-5">
-                <div id="burgerClick" class="text-center">
-                    <h5>${player.clicking} Burgers</h5>
+            <div class="col-md-5 " id="mainPageLeft">
+                <div class="text-center my-5">
+                    <h5 id="numberOfBurger">${player.clicking} Burgers</h5>
                     <h5>One click $25</h5>
-                    <img src="./burger.png" class="burgerImg">
+                    <img src="./burger.png" class="burger" id="burgerImg">
                 </div>    
             </div>
             <div class="col-md-7 bg-danger">
@@ -78,5 +83,11 @@ function drawingMainPage(player){
 
     </div>
     `;
+
+    container.querySelectorAll("#burgerImg")[0].addEventListener("click",function(){
+        player.clickBurger();
+    })
+    container.querySelectorAll("#mainPageLeft")[0].append(backPurchaseBtns("Save","Reset"));
+
     return container;
 }
