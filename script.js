@@ -5,6 +5,11 @@ const config = {
 }
 
 class PlayerInfo{
+    defalutAge = 20;
+    defalutDays = 0;
+    defaultMoney = 50000;
+    defaultClicking = 0;
+
     constructor(playerName, age, days, money, clicking){
         this.playerName = playerName;
         this.age = age;
@@ -29,10 +34,19 @@ function makingBtns(btn1, btn2){
     return container
 }
 
-function loadPlayerInfo(){
-
+function initializePlayerInfo(){
+    let player = new PlayerInfo(
+        config.loginPage.querySelectorAll("input")[0].value,
+        this.defalutAge,
+        this.defalutDays,
+        this.defaultMoney,
+        this.defaultClicking
+    )
+    console.log(player);
+    config.loginPage.classList.add("d-none");
+    //config.mainPage.append(drawingMainPage(player));
 }
 
-function drawingMainPage(){
+function drawingMainPage(player){
 
 }
