@@ -91,3 +91,20 @@ function drawMainPage(player){
 
     return container;
 }
+
+class Menu{
+    constructor(itemName, price, img, numberOwned, earnPerSecond){
+        this.itemName = itemName;
+        this.price = price;
+        this.img = img;
+        this.numberOwned = numberOwned;
+        this.earnPerSecond = earnPerSecond;
+    }
+}
+
+const menuList = [
+    new Menu("Flip machine", 15000, "./flip_machine/png", 0, 25),
+    new Menu("ETF Stock", "./ETF.png", 300000, 0, 0.1),
+    new Menu("ETF Bonds", 300000, "./ETF.png", 0, 0.07),
+    new Menu("Lemonade Stand", 30000, "./lemonade.png", 0, 30)
+]
