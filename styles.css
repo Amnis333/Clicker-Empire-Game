@@ -1,4 +1,10 @@
 .burger{
-    height: 55vh;
-    width: 55vh;
+    height: 25vh;
+    width: 30vh;
+    margin: 15%;
+}
+
+.scroll{
+    border: 2px solid #000;
+    overflow-y: scroll;
 }
