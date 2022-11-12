@@ -70,6 +70,11 @@ class PlayerInfo{
             this.money += item.amountOfEarning * item.numberPurchased;
         }
     }
+
+    purchaseItem(item){
+        this.money -= item.price;
+        item.numberPurchased ++;
+    }
 }
 
 
@@ -92,17 +97,13 @@ function drawTwoBtns(btn1, btn2){
 
 function initializePlayerInfo(){
     //localStrageにconfig.loginPage.querySelectorAll("input")[0].valueがあるかどうか
-    const defaultAge = 20;
-    const defaultDays = 0; 
-    const defaultMoney = 50000;
-    const defaultClicking = 0;
     
     let player = new PlayerInfo(
         config.loginPage.querySelectorAll("input")[0].value,
-        defaultAge,
-        defaultDays,
-        defaultMoney,
-        defaultClicking
+        20,
+        0,
+        50000,
+        0
     );
     displayNone(config.loginPage);
     //config.loginPage.classList.add("d-none");
@@ -110,6 +111,7 @@ function initializePlayerInfo(){
 }
 
 function drawMainPage(player){
+    //console.log(typeof player)
     let container = document.createElement("div");
     container.innerHTML = `
     <div class="vh-100 d-md-flex justify-content-center container">
@@ -149,14 +151,15 @@ function drawMainPage(player){
         container.querySelector("#totalmoney").innerHTML = player.money;
     })
     container.querySelectorAll("#mainPageLeft")[0].append(drawTwoBtns("Save","Reset"));
-    container.querySelectorAll("#items")[0].append(drawItems(itemList));
+    container.querySelectorAll("#items")[0].append(drawItems(itemList, player));
 
     return container;
 }
 
 
 //アイテムを描く関数
-function drawItems(itemList){
+function drawItems(itemList, player){
+    //console.log(player.playerName);
     let container = document.createElement("div");
     
     for(let i = 0; i < itemList.length; i++){
@@ -189,14 +192,14 @@ function drawItems(itemList){
         itemDiv.addEventListener("click", function(){
             //container.innerHTML = ``;
             displayNone(config.mainPage.querySelectorAll("#items")[0]);
-            config.mainPage.querySelectorAll(".scroll")[0].append(drawItemDetail(itemList[i]));
+            config.mainPage.querySelectorAll(".scroll")[0].append(drawItemDetail((itemList[i]), player));
         });
     }
     return container;
 }
 
 //itemをクリックすると詳細が表示される関数
-function drawItemDetail(item){
+function drawItemDetail(item, player){
     let container = document.createElement("div");
     let detailDiv = document.createElement("div");
     detailDiv.innerHTML = `
@@ -216,7 +219,7 @@ function drawItemDetail(item){
             <h5>How many would you like to buy?</h5>
         </div>
         <div>
-            <input type="number" class="form-control text-left">
+            <input type="number" class="form-control text-left" placeholder = 0>
         </div>
         <div class="my-3">
             <h5>total: $${item.price}</h5>
@@ -230,6 +233,13 @@ function drawItemDetail(item){
         //GoBackボタンが押されたときの処理
         displayNone(container);
         displayBlock(config.mainPage.querySelectorAll("#items")[0]);
+    });
+
+    container.querySelectorAll(".btn-2")[0].addEventListener("click", function(){
+        //Purchaseボタンが押された時の処理
+        player.purchaseItem(item);
+        config.mainPage.innerHTML = ``;
+        config.mainPage.append(drawMainPage(player));
     });
 
     return container;
