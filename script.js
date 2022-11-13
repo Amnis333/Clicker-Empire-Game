@@ -10,8 +10,7 @@ function displayNone(elem){
 
 const config = {
     loginPage : document.getElementById("loginPage"),
-    mainPage : document.getElementById("mainPage"),
-    purchasePage : document.getElementById("purchasePage")
+    mainPage : document.getElementById("mainPage")
 }
 
 class Item{
@@ -105,13 +104,28 @@ function initializePlayerInfo(){
         50000,
         0
     );
+    
     displayNone(config.loginPage);
-    //config.loginPage.classList.add("d-none");
     config.mainPage.append(drawMainPage(player));
+    setInterval(function(){
+        player.days++;
+        config.mainPage.querySelector("#days").innerHTML = ``;
+        config.mainPage.querySelector("#days").innerHTML = `${player.days} days`;
+        if(player.days % 365 == 0){
+            config.mainPage.querySelector("#age").innerHTML = ``;
+            player.age++;
+            config.mainPage.querySelector("#age").innerHTML = `${player.age} years old`;
+        }
+        //this.money += itemList[i].numberPurchased × itemList[i].amountOfEarning
+        config.mainPage.querySelector("#totalmoney").innerHTML = ``;
+        for(let i = 1; i < itemList.length; i++){
+            player.money += itemList[i].numberPurchased * itemList[i].amountOfEarning;
+        }
+        config.mainPage.querySelector("#totalmoney").innerHTML = `$${player.money}`;
+    },1000);
 }
 
 function drawMainPage(player){
-    //console.log(typeof player)
     let container = document.createElement("div");
     container.innerHTML = `
     <div class="vh-100 d-md-flex justify-content-center container">
@@ -119,7 +133,7 @@ function drawMainPage(player){
             <div class="col-md-5 col-12 my-md-3" id="mainPageLeft">
                 <div class="text-center my-5">
                     <h5 id="numberOfBurger">${player.clicking} Burgers</h5>
-                    <h5>One click $25</h5>
+                    <h5>One click ${(itemList[0].numberPurchased + 1) * 25}</h5>
                     <img src="./burger.png" class="burger" id="burgerImg">
                 </div>    
             </div>
@@ -127,10 +141,10 @@ function drawMainPage(player){
                 <div class="my-5">
                     <div class="d-flex text-center">
                         <h5 class="col-md-6 col-12">${player.playerName}</h5>
-                        <h5 class="col-md-6 col-12">${player.age} years old</h5>
+                        <h5 class="col-md-6 col-12" id="age">${player.age} years old</h5>
                     </div>
                     <div class="d-flex text-center">
-                        <h5 class="col-md-6 col-12">${player.days} days</h5>
+                        <h5 class="col-md-6 col-12" id="days">${player.days} days</h5>
                         <h5 class="col-md-6 col-12" id="totalmoney">$${player.money}</h5>
                     </div>
                 </div>
@@ -148,7 +162,7 @@ function drawMainPage(player){
         player.clickBurger();
         container.querySelector("#numberOfBurger").innerHTML = player.clicking + " Burgers";
         player.increaseMoney(itemList[0]);
-        container.querySelector("#totalmoney").innerHTML = player.money;
+        container.querySelector("#totalmoney").innerHTML = `$${player.money}`;
     })
     container.querySelectorAll("#mainPageLeft")[0].append(drawTwoBtns("Save","Reset"));
     container.querySelectorAll("#items")[0].append(drawItems(itemList, player));
@@ -159,7 +173,6 @@ function drawMainPage(player){
 
 //アイテムを描く関数
 function drawItems(itemList, player){
-    //console.log(player.playerName);
     let container = document.createElement("div");
     
     for(let i = 0; i < itemList.length; i++){
@@ -190,7 +203,6 @@ function drawItems(itemList, player){
         container.append(itemDiv);
 
         itemDiv.addEventListener("click", function(){
-            //container.innerHTML = ``;
             displayNone(config.mainPage.querySelectorAll("#items")[0]);
             config.mainPage.querySelectorAll(".scroll")[0].append(drawItemDetail((itemList[i]), player));
         });
@@ -219,15 +231,27 @@ function drawItemDetail(item, player){
             <h5>How many would you like to buy?</h5>
         </div>
         <div>
-            <input type="number" class="form-control text-left" placeholder = 0>
+            <input type="number" class="form-control text-left" id="purchase-form" placeholder = 0  min = 1>
         </div>
-        <div class="my-3">
-            <h5>total: $${item.price}</h5>
+        <div class="my-3" id = "total">
+            
         </div>
     </div>
     `;
+
+
+
     detailDiv.querySelector(".container").append(drawTwoBtns("Go Back", "Purchase"));
     container.append(detailDiv);
+
+    //総額を表示　とりあえず動くコード
+    container.querySelector("input").addEventListener("change", function(){
+        let total = document.createElement("h5");
+        let totalAmount = item.price * container.querySelector("#purchase-form").value;
+        detailDiv.querySelector("#total").innerHTML = ``;
+        total.innerHTML = `total: $${totalAmount}`;
+        detailDiv.querySelector("#total").append(total);
+    });
 
     container.querySelectorAll(".btn-1")[0].addEventListener("click", function(){
         //GoBackボタンが押されたときの処理
@@ -237,7 +261,20 @@ function drawItemDetail(item, player){
 
     container.querySelectorAll(".btn-2")[0].addEventListener("click", function(){
         //Purchaseボタンが押された時の処理
-        player.purchaseItem(item);
+        let numberOfitem = container.querySelector("#purchase-form").value;
+        //総額が現在の保有金額より多い場合は買えないようにする
+        let totalAmount = item.price * numberOfitem;
+        if(numberOfitem > 0 && totalAmount <= player.money){
+            for(let i = 1; i <= numberOfitem; i++){
+                player.purchaseItem(item);
+            }
+        }
+        else if(totalAmount >= player.money){
+            alert("所持金が不足しています");
+        }
+        else{
+            alert("購入する場合は1以上の値を入力してください")
+        }
         config.mainPage.innerHTML = ``;
         config.mainPage.append(drawMainPage(player));
     });
