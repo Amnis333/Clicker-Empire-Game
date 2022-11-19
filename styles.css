@@ -1,6 +1,6 @@
 .burger{
-    height: 25vh;
-    width: 30vh;
+    height: 70%;
+    width: 70%;
     margin: 15%;
 }
 
@@ -13,11 +13,14 @@
 }
 
 .itemImg{
-    height: 20vh;
-    width: 20vh;
+    height: 85%;
 }
 
 .vh-35{
     height: 35vh;
     width: auto;
+}
+
+.itemDetailImg{
+    height: 6em;
 }
