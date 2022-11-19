@@ -26,17 +26,18 @@ class Item{
 }
 
 const itemList = [
-    new Item("Flip machine", 15000, "./flip_machine.png", 0, 25, 500, "/click"),
-    new Item("ETF Stock", 300000, "./etf.png", 0, 0.1, Infinity, "/s"),
-    new Item("ETF Bonds", 300000, "./etf.png", 0, 0.07, Infinity, "/s"),
-    new Item("Lemonade Stand", 30000, "./lemonade.png", 0, 30, 1000, "/s"),
-    new Item("Ice Cream Truck", 100000, "./ice_cream.webp", 0, 120, 500, "/s"),
-    new Item("House", 20000000, "./house.webp", 0, 32000, 100, "/s"),
-    new Item("TownHouse", 40000000, "./town_house.webp", 0, 64000, 100, "/s"),
-    new Item("Condominium", 250000000, "./condominium.webp", 0, 500000, 20, "/s"),
-    new Item("Industrial Space", 100000000, "./factory.webp", 0, 2200000, 10, "/s"),
-    new Item("Hotel Skyscraper", 10000000000, "./skyscraper.webp", 0, 25000000, 5, "/s"),
-    new Item("Bullet-Speed Sky Railway", 10000000000000, "./train.webp", 0, 30000000000, 1, "/s")
+    new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
+    new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
+    new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
+    new Item("Lemonade Stand", 30000, "./img/lemonade.png", 0, 30, 1000, "/s"),
+    new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
+    new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
+    new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
+    new Item("Condominium", 250000000, "./img/condominium.webp", 1, 500000, 20, "/s"),
+    new Item("Industrial Space", 100000000, "./img/factory.webp", 1, 2200000, 10, "/s"),
+    new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 1, 25000000, 5, "/s"),
+    new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s"),
+    new Item("Tech Company", 44000000000000,"./img/tech_company.png",0,100000000000,1,"/s")
 ]
 
 class PlayerInfo{
@@ -99,9 +100,26 @@ function loadOrCreate(){
     let inputName = config.loginPage.querySelectorAll("input")[0].value;
     //Newボタンを押した時の処理
     config.loginPage.querySelector("#new").addEventListener("click", function(){
-        if(localStorage.getItem(inputName) === null){
+        if(localStorage.getItem(inputName) === null && inputName === "musk"){
+            let player = new PlayerInfo(inputName,50,0,10000000,0,[
+                new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
+                new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
+                new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
+                new Item("Lemonade Stand", 30000, "./img/lemonade.png", 0, 30, 1000, "/s"),
+                new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
+                new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
+                new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
+                new Item("Condominium", 250000000, "./img/condominium.webp", 1, 500000, 20, "/s"),
+                new Item("Industrial Space", 100000000, "./img/factory.webp", 1, 2200000, 10, "/s"),
+                new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 1, 25000000, 5, "/s"),
+                new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s"),
+                new Item("Tech Company", 44000000000000,"./img/tech_company.png",0,100000000000,1,"/s")
+            ])
+            startGame(player);
+        }
+        else if(localStorage.getItem(inputName) === null){
             let player = new PlayerInfo(
-                config.loginPage.querySelectorAll("input")[0].value, 20, 0, 50000, 0,itemList
+                inputName, 20, 0, 50000, 0,itemList
             );
             startGame(player);        
         }
@@ -116,9 +134,6 @@ function loadOrCreate(){
             let player = new PlayerInfo(loginInfo.playerName, loginInfo.age, loginInfo.days, loginInfo.money, loginInfo.clicking,loginInfo.item);
             console.log("loginInfo: " + loginInfo);
             console.log("player: " + player);
-            console.log(typeof loginInfo + "is type of loginInfo");
-            console.log(typeof player + "is type of player");
-            console.log(loginInfo === player);
             startGame(player);
         }
         else{
@@ -184,7 +199,7 @@ function drawMainPage(player){
         console.log("clicked Save button");
         let jsonPlayer = JSON.stringify(player);
         localStorage.setItem(player.playerName, jsonPlayer);
-        console.log(localStorage.getItem(player.playerName));
+        //console.log(localStorage.getItem(player.playerName));
 
     });
     container.querySelectorAll(".btn")[1].addEventListener("click", function(){
@@ -292,6 +307,7 @@ function drawItemDetail(item, player){
         </div>
     </div>
     `;
+
 
     detailDiv.querySelector(".container").append(drawTwoBtns("Go Back", "Purchase"));
     container.append(detailDiv);
