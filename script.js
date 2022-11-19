@@ -25,30 +25,17 @@ class Item{
     }
 }
 
-const itemList = [
-    new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
-    new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
-    new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
-    new Item("Lemonade Stand", 30000, "./img/lemonade.png", 0, 30, 1000, "/s"),
-    new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
-    new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
-    new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
-    new Item("Condominium", 250000000, "./img/condominium.webp", 1, 500000, 20, "/s"),
-    new Item("Industrial Space", 100000000, "./img/factory.webp", 1, 2200000, 10, "/s"),
-    new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 1, 25000000, 5, "/s"),
-    new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s"),
-    new Item("Tech Company", 44000000000000,"./img/tech_company.png",0,100000000000,1,"/s")
-]
 
 class PlayerInfo{
 
-    constructor(playerName, age, days, money, clicking,item){
+    constructor(playerName, age, days, money, clicking,itemList){
         this.playerName = playerName;
         this.age = age;
         this.days = days;
         this.money = money;
         this.clicking = clicking; //クリック回数
-        this.item = item;//アイテムの保持状況
+        this.itemList = itemList;//アイテムの保持状況
+        this.intervalId = null;
     }
 
     clickBurger(){
@@ -57,13 +44,17 @@ class PlayerInfo{
     }
     
     increaseMoney(item){
-        if(item === itemList[0]){
+        if(item === this.itemList[0]){
             //itemがflip_machineの場合
             this.money += 25 + item.amountOfEarning * item.numberPurchased;
         }
-        else if(item === itemList[1] || item === itemList[2]){
-            //itemがETFの場合
-            this.money *= 1.1;
+        else if(item === this.itemList[1]){
+            //itemがETF Stockの場合
+            this.money += (1.001 * item.numberPurchased * item.price);
+        }
+        else if(item === this.itemList[2]){
+            //itemがETF Bondsの場合
+            this.money += (1.0007 * item.numberPurchased * item.price);
         }
         else{
             this.money += item.amountOfEarning * item.numberPurchased;
@@ -74,11 +65,12 @@ class PlayerInfo{
         this.money -= item.price;
         item.numberPurchased ++;
         //ETF Stockは購入するたびに価格が10%増える
-        if(item === itemList[1]){
+        if(item === this.itemList[1]){
             item.price *= 1.1;
         }
     }
 }
+
 
 function drawTwoBtns(btn1, btn2){
     let container = document.createElement("div");
@@ -101,7 +93,8 @@ function loadOrCreate(){
     //Newボタンを押した時の処理
     config.loginPage.querySelector("#new").addEventListener("click", function(){
         if(localStorage.getItem(inputName) === null && inputName === "musk"){
-            let player = new PlayerInfo(inputName,50,0,10000000,0,[
+            let player = new PlayerInfo(
+                inputName,50,0,10000000,0,[
                 new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
                 new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
                 new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
@@ -119,25 +112,34 @@ function loadOrCreate(){
         }
         else if(localStorage.getItem(inputName) === null){
             let player = new PlayerInfo(
-                inputName, 20, 0, 50000, 0,itemList
-            );
+                inputName, 20, 0, 50000, 0,[
+                    new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
+                    new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
+                    new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
+                    new Item("Lemonade Stand", 30000, "./img/lemonade.png", 0, 30, 1000, "/s"),
+                    new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
+                    new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
+                    new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
+                    new Item("Condominium", 250000000, "./img/condominium.webp", 0, 500000, 20, "/s"),
+                    new Item("Industrial Space", 100000000, "./img/factory.webp", 0, 2200000, 10, "/s"),
+                    new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 0, 25000000, 5, "/s"),
+                    new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s")
+                ]);
             startGame(player);        
         }
         else{
-            console.log(`${inputName}は既に存在します。Continueボタンを押してください。`);
+            alert(`${inputName}は既に存在します。Loadボタンを押してください。`);
         }
     }, {once : true});
-    //Continueボタンを押した時の処理
+    //Loadボタンを押した時の処理
     config.loginPage.querySelector("#load").addEventListener("click", function(){
         if(localStorage.getItem(inputName) !== null){
             let loginInfo = JSON.parse(localStorage.getItem(inputName))
-            let player = new PlayerInfo(loginInfo.playerName, loginInfo.age, loginInfo.days, loginInfo.money, loginInfo.clicking,loginInfo.item);
-            console.log("loginInfo: " + loginInfo);
-            console.log("player: " + player);
+            let player = new PlayerInfo(loginInfo.playerName, loginInfo.age, loginInfo.days, loginInfo.money, loginInfo.clicking,loginInfo.itemList);
             startGame(player);
         }
         else{
-            console.log(` ${inputName}は存在しません。Newボタンを押してください。`);
+            alert(` ${inputName}は存在しません。Newボタンを押してください。`);
         }
     }, {once : true});
 
@@ -152,10 +154,10 @@ function drawMainPage(player){
             <div class="col-md-5 col-12 m-md-2 p-1 px-3 bg-dark" id="mainPageLeft">
                 <div class="text-center my-3 bg-secondary p-2 text-light">
                     <h5 id="numberOfBurger">${player.clicking} Burgers</h5>
-                    <h5>One click $${(player.item[0].numberPurchased + 1) * 25}</h5>
+                    <h5>One click $${(player.itemList[0].numberPurchased + 1) * 25}</h5>
                 </div>
                 <div class="col-12">
-                    <img src="./burger.png" class="burger" id="burgerImg">
+                    <img src="./img/burger.png" class="burger" id="burgerImg">
                 </div>
             </div>
             <div class="col-md-7 col-12 my-md-2" id="mainPageRight">
@@ -185,42 +187,44 @@ function drawMainPage(player){
         container.querySelector("#numberOfBurger").innerHTML = ``;
         player.clickBurger();
         container.querySelector("#numberOfBurger").innerHTML = player.clicking + " Burgers";
-        player.increaseMoney(player.item[0]);
+        player.increaseMoney(player.itemList[0]);
         container.querySelector("#totalmoney").innerHTML = ``;
         container.querySelector("#totalmoney").innerHTML = `$${player.money}`;
     })
     container.querySelectorAll(".save-reset")[0].append(drawTwoBtns("Save","Ending"));
-    container.querySelectorAll(".btn")[0].classList.add("btn-dark");
-    container.querySelectorAll(".btn")[1].classList.add("btn-dark");
-    container.querySelectorAll("#items")[0].append(drawItems(player.item, player));
+    container.querySelectorAll(".btn")[0].classList.add("btn-dark","save");
+    container.querySelectorAll(".btn")[1].classList.add("btn-dark","reset");
+    container.querySelectorAll("#items")[0].append(drawItems(player.itemList, player));
     
-    container.querySelectorAll(".btn")[0].addEventListener("click", function(){
+    container.querySelector(".save").addEventListener("click", function(){
         //Saveを押した時の処理
-        console.log("clicked Save button");
+        alert("セーブして終了します。");
         let jsonPlayer = JSON.stringify(player);
         localStorage.setItem(player.playerName, jsonPlayer);
-        //console.log(localStorage.getItem(player.playerName));
+        console.log(localStorage.getItem(player.playerName));
+        clearInterval(player.intervalId);
+        config.mainPage.innerHTML = ``;
+        displayBlock(config.loginPage);
 
     });
-    container.querySelectorAll(".btn")[1].addEventListener("click", function(){
+    container.querySelector(".reset").addEventListener("click", function(){
         //Endingを押した時の処理
         console.log("clicked Ending button");
+        clearInterval(player.intervalId);
         localStorage.removeItem(`${player.playerName}`);
-        //config.mainPage.innerHTML = ``;
-        //displayBlock(config.loginPage);
+        config.mainPage.innerHTML = ``;
+        displayBlock(config.loginPage);
     });
     
     return container;
 }
 
 function startGame(player){
-    console.log(player);
     displayNone(config.loginPage);
     displayBlock(config.mainPage);
     config.mainPage.innerHTML = ``;
     config.mainPage.append(drawMainPage(player));
-    console.log(config.mainPage);
-    setInterval(function(){
+    player.intervalId = setInterval(function(){
         player.days++;
         config.mainPage.querySelector("#days").innerHTML = ``;
         config.mainPage.querySelector("#days").innerHTML = `${player.days} days`;
@@ -231,8 +235,8 @@ function startGame(player){
             config.mainPage.querySelector("#age").innerHTML = `${player.age} years old`;
         }
         
-        for(let i = 1; i < player.item.length; i++){
-            player.money += player.item[i].numberPurchased * player.item[i].amountOfEarning;
+        for(let i = 1; i < player.itemList.length; i++){
+            player.money += player.itemList[i].numberPurchased * player.itemList[i].amountOfEarning;
         }
         config.mainPage.querySelector("#totalmoney").innerHTML = ``;
         config.mainPage.querySelector("#totalmoney").innerHTML = `$${player.money}`;
@@ -307,7 +311,6 @@ function drawItemDetail(item, player){
         </div>
     </div>
     `;
-
 
     detailDiv.querySelector(".container").append(drawTwoBtns("Go Back", "Purchase"));
     container.append(detailDiv);
