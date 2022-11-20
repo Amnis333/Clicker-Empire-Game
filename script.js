@@ -206,16 +206,14 @@ function drawMainPage(player){
         let jsonPlayer = JSON.stringify(player);
         localStorage.setItem(player.playerName, jsonPlayer);
         clearInterval(player.intervalId);
-        alert("intervalId is " + player.intervalId);
         config.mainPage.innerHTML = ``;
         displayBlock(config.loginPage);
 
     });
     container.querySelector(".reset").addEventListener("click", function(){
         //Endingを押した時の処理
-        alert("clicked Ending button");
+        alert("エンディングへ進みます");
         clearInterval(player.intervalId);
-        alert("intervalId is " + player.intervalId);
         config.mainPage.innerHTML = ``;
         displayNone(config.mainPage);
         config.endingPage.append(drawEndingPage(player));
@@ -248,8 +246,6 @@ function startGame(player){
         config.mainPage.querySelector("#totalmoney").innerHTML = ``;
         config.mainPage.querySelector("#totalmoney").innerHTML = `$${player.money}`;
     },1000);
-
-    alert("intervalId is " + player.intervalId);
 }
 
 //アイテムを描く関数
