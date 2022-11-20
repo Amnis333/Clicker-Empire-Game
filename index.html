@@ -16,13 +16,13 @@
     <div id="loginPage" class="vh-100 d-flex justify-content-center align-items-center flex-column">
       <div class="col-md-4 col-11 bg-light d-flex flex-wrap align-items-center justify-content-center" id="loginBox">
         <h2 class="col-md-10 p-2 text-center">Clicker Empire Game</h2>
-        <form class="form col-md-10 col-8 p-md-4"onsubmit="loadOrCreate(); event.preventDefault()">
+        <div class="form col-md-10 col-8 p-md-4">
           <input type="text" placeholder="Your Name" class="form-control" required="required">
           <div class="d-md-flex col-12 justify-content-between p-1 my-2">
-            <button type="submit" class="btn btn-primary col-md-4 col-12 m-1 text-center p-1" id="new">New</button>
-            <button type="submit" class="btn btn-primary col-md-4 col-12 m-1 text-center p-1" id="load">Load</button>
+            <button type="submit" class="btn btn-primary col-md-4 col-12 m-1 text-center p-1" id="new" onclick="createNewPlayer();">New</button>
+            <button type="submit" class="btn btn-primary col-md-4 col-12 m-1 text-center p-1" id="load" onclick="loadPlayer();">Load</button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <!--2ページ目　メインページ-->

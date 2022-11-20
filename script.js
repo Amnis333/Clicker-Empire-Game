@@ -87,15 +87,34 @@ function drawTwoBtns(btn1, btn2){
     return container
 }
 
-function loadOrCreate(){
-    //クリックの反応が悪い
+function createNewPlayer(){
     let inputName = config.loginPage.querySelectorAll("input")[0].value;
     //Newボタンを押した時の処理
-    config.loginPage.querySelector("#new").addEventListener("click", function(){
+    if(inputName === "" || inputName === " " || inputName === "　"){
+        alert("名前を入力してください");
+    }
         //特殊プレイヤー：musk Tech Company買収可能
-        if(localStorage.getItem(inputName) === null && inputName === "musk"){
-            let player = new PlayerInfo(
-                inputName,50,0,10000000,0,[
+    else if(localStorage.getItem(inputName) === null && inputName === "musk"){
+        let player = new PlayerInfo(
+            inputName,50,0,10000000,0,[
+            new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
+            new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
+            new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
+            new Item("Lemonade Stand", 30000, "./img/lemonade.png", 0, 30, 1000, "/s"),
+            new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
+            new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
+            new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
+            new Item("Condominium", 250000000, "./img/condominium.webp", 1, 500000, 20, "/s"),
+            new Item("Industrial Space", 100000000, "./img/factory.webp", 1, 2200000, 10, "/s"),
+            new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 1, 25000000, 5, "/s"),
+            new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s"),
+            new Item("Tech Company", 44000000000000,"./img/tech_company.png",0,100000000000,1,"/s")
+        ])
+        startGame(player);
+    }
+    else if(localStorage.getItem(inputName) === null){
+        let player = new PlayerInfo(
+            inputName, 20, 0, 50000, 0,[
                 new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
                 new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
                 new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
@@ -103,48 +122,31 @@ function loadOrCreate(){
                 new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
                 new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
                 new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
-                new Item("Condominium", 250000000, "./img/condominium.webp", 1, 500000, 20, "/s"),
-                new Item("Industrial Space", 100000000, "./img/factory.webp", 1, 2200000, 10, "/s"),
-                new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 1, 25000000, 5, "/s"),
-                new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s"),
-                new Item("Tech Company", 44000000000000,"./img/tech_company.png",0,100000000000,1,"/s")
-            ])
-            startGame(player);
-        }
-        else if(localStorage.getItem(inputName) === null){
-            let player = new PlayerInfo(
-                inputName, 20, 0, 50000, 0,[
-                    new Item("Flip machine", 15000, "./img/flip_machine.png", 0, 25, 500, "/click"),
-                    new Item("ETF Stock", 300000, "./img/etf.png", 0, 0.1, Infinity, "/s"),
-                    new Item("ETF Bonds", 300000, "./img/etf.png", 0, 0.07, Infinity, "/s"),
-                    new Item("Lemonade Stand", 30000, "./img/lemonade.png", 0, 30, 1000, "/s"),
-                    new Item("Ice Cream Truck", 100000, "./img/ice_cream.webp", 0, 120, 500, "/s"),
-                    new Item("House", 20000000, "./img/house.webp", 0, 32000, 100, "/s"),
-                    new Item("TownHouse", 40000000, "./img/town_house.webp", 0, 64000, 100, "/s"),
-                    new Item("Condominium", 250000000, "./img/condominium.webp", 0, 500000, 20, "/s"),
-                    new Item("Industrial Space", 100000000, "./img/factory.webp", 0, 2200000, 10, "/s"),
-                    new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 0, 25000000, 5, "/s"),
-                    new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s")
-                ]);
-            startGame(player);        
-        }
-        else{
-            alert(`${inputName}は既に存在します。Loadボタンを押してください。`);
-        }
-    });
-    //Loadボタンを押した時の処理
-    config.loginPage.querySelector("#load").addEventListener("click", function(){
-        if(localStorage.getItem(inputName) !== null){
-            let loginInfo = JSON.parse(localStorage.getItem(inputName))
-            let player = new PlayerInfo(loginInfo.playerName, loginInfo.age, loginInfo.days, loginInfo.money, loginInfo.clicking,loginInfo.itemList);
-            startGame(player);
-        }
-        else{
-            alert(` ${inputName}は存在しません。Newボタンを押してください。`);
-        }
-    });
+                new Item("Condominium", 250000000, "./img/condominium.webp", 0, 500000, 20, "/s"),
+                new Item("Industrial Space", 100000000, "./img/factory.webp", 0, 2200000, 10, "/s"),
+                new Item("Hotel Skyscraper", 10000000000, "./img/skyscraper.webp", 0, 25000000, 5, "/s"),
+                new Item("Bullet-Speed Sky Railway", 10000000000000, "./img/train.webp", 0, 30000000000, 1, "/s")
+            ]);
+        startGame(player);        
+    }
+    else{
+        alert(`${inputName}は既に存在します。Loadボタンを押してください。`);
+    }    
+}
 
-    
+function loadPlayer(){
+    let inputName = config.loginPage.querySelectorAll("input")[0].value;
+    if(inputName === "" || inputName === " " || inputName === "　"){
+        alert("名前を入力してください");
+    }
+    else if(localStorage.getItem(inputName) !== null){
+        let loginInfo = JSON.parse(localStorage.getItem(inputName))
+        let player = new PlayerInfo(loginInfo.playerName, loginInfo.age, loginInfo.days, loginInfo.money, loginInfo.clicking,loginInfo.itemList);
+        startGame(player);
+    }
+    else{
+        alert(` ${inputName}は存在しません。Newボタンを押してください。`);
+    }
 }
 
 function drawMainPage(player){
@@ -204,7 +206,6 @@ function drawMainPage(player){
         localStorage.setItem(player.playerName, jsonPlayer);
         clearInterval(player.intervalId);
         alert("intervalId is " + player.intervalId);
-        console.log(localStorage.getItem(player.playerName));
         config.mainPage.innerHTML = ``;
         displayBlock(config.loginPage);
 
@@ -319,7 +320,7 @@ function drawItemDetail(item, player){
     detailDiv.querySelector(".container").append(drawTwoBtns("Go Back", "Purchase"));
     container.append(detailDiv);
 
-    //総額を表示　とりあえず動くコード
+    //総額を表示
     container.querySelector("input").addEventListener("change", function(){
         let total = document.createElement("h5");
         let totalAmount = item.price * container.querySelector("#purchase-form").value;
