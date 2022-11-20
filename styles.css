@@ -21,6 +21,43 @@
     width: auto;
 }
 
+
 .itemDetailImg{
     height: 6em;
+}
+
+.lasvegas{
+    position: relative;
+    background-image: url("./img/lasvegas.jpg");
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+}
+
+.shop{
+    position: relative;
+    background-image: url("./img/shop.jpeg");
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+}
+
+.sleep{
+    position: relative;
+    background-image: url("./img/sleep.jpg");
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+}
+
+.factory{
+    position: relative;
+    background-image: url("./img/factorybg.jpg");
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
 }

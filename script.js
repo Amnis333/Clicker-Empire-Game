@@ -10,7 +10,8 @@ function displayNone(elem){
 
 const config = {
     loginPage : document.getElementById("loginPage"),
-    mainPage : document.getElementById("mainPage")
+    mainPage : document.getElementById("mainPage"),
+    endingPage : document.getElementById("endingPage")
 }
 
 class Item{
@@ -75,7 +76,7 @@ class PlayerInfo{
 function drawTwoBtns(btn1, btn2){
     let container = document.createElement("div");
     container.innerHTML = `
-    <div class="d-flex col-12 justify-content-between">
+    <div class="d-flex col-12 justify-content-between btn-container">
         <div class="col-6 d-flex justify-content-center">
             <button class="btn btn-primary btn-1">${btn1}</button>
         </div>
@@ -213,11 +214,13 @@ function drawMainPage(player){
     container.querySelector(".reset").addEventListener("click", function(){
         //Endingを押した時の処理
         alert("clicked Ending button");
-        localStorage.removeItem(`${player.playerName}`);
         clearInterval(player.intervalId);
         alert("intervalId is " + player.intervalId);
         config.mainPage.innerHTML = ``;
-        displayBlock(config.loginPage);
+        displayNone(config.mainPage);
+        config.endingPage.append(drawEndingPage(player));
+        displayBlock(config.endingPage);
+
     });
     
     return container;
@@ -357,5 +360,88 @@ function drawItemDetail(item, player){
         config.mainPage.append(drawMainPage(player));
     });
 
+    return container;
+}
+
+function drawEndingPage(player){
+    let container = document.createElement("div");
+    if(player.itemList[8].numberPurchased * player.itemList[9].numberPurchased * player.itemList[10].numberPurchased > 0){
+        //工場・ホテル・鉄道すべてを1つ以上所有
+        container.classList.add("lasvegas","d-flex","justify-content-center","align-items-center");
+        container.innerHTML = `
+        <div class="bg-dark col-10 col-md-6 box">
+            <div class="d-flex justify-content-center align-items-end flex-wrap text-light p-5">
+                <p>${player.playerName}はついに大富豪になるという夢を叶えた。世界中に事業を展開し、もはや${player.playerName}の名前を知らない者はいないほどの大富豪となったのだ。
+                １国の経済だけでなく、世界経済も支えるようになり、その影響力から「${player.playerName}帝国」と巷では呼ばれることもある。
+                <br>...勘の良い人は気づいたであろう。このゲームは「Clicker Empire Game」、お金を稼いで自身の帝国を作るゲームだ。ゲームクリアおめでとう。
+                </p>
+            </div>
+            <h6 class="text-light text-center">エンディング４：大富豪エンド</h6>
+        </div>
+        `;
+    }
+    else if(player.itemList[8].numberPurchased + player.itemList[9].numberPurchased > 0){
+        //工場・ホテルをいずれか1つ以上所有
+        container.classList.add("factory","d-flex","justify-content-center","align-items-center");
+        container.innerHTML = `
+        <div class="bg-dark col-10 col-md-6 box">
+            <div class="d-flex justify-content-center align-items-end flex-wrap text-light p-5">
+                <p>${player.playerName}はもうハンバーガーショップの店員ではない。
+                ハンバーガーショップがあまりにも繁盛したので、今や国内に数百店舗を展開するハンバーガーショップの経営者となった。
+                だが、${player.playerName}は満足していない。物流コストに弱みがある一方で、市場での激しい価格競争が企業の利益を圧迫しているのだ。
+                ${player.playerName}は競争に打ち勝つべく、自前の物流網を獲得しようと躍起になっている...。
+                </p>
+            </div>
+            <h6 class="text-light text-center">エンディング３：資本家エンド</h6>
+        </div>
+        `;
+    }
+    else if(player.clicking === 0){
+        //一度も労働しない場合
+        container.classList.add("sleep","d-flex","justify-content-center","align-items-center");
+        container.innerHTML = `
+        <div class="bg-dark col-10 col-md-6 box">
+            <div class="d-flex justify-content-center align-items-end flex-wrap text-light p-5">
+                <p>${player.playerName}は労働を知らない。「働いたら負け」を信条に生きているのだ。
+                <br>「働いたらお金はもらえるが、その分時間と体力を消費する。
+                <br>ハンバーガーをポチポチすることにそれらを費やすことは有意義だろうか。
+                <br>それなら自分のやりたいことをやった方がましに決まってる、寝てても生きていけるのだから」
+                <br>そう思いながら${player.playerName}は今日も二度寝に入るのであった...。
+                </p>
+            </div>
+            <h6 class="text-light text-center">エンディング２：効率廚エンド</h6>
+        </div>
+        `;
+    }
+    else{
+        container.classList.add("shop","d-flex","justify-content-center","align-items-center");
+        container.innerHTML = `
+        <div class="bg-dark col-10 col-md-6 box">
+            <div class="d-flex justify-content-center align-items-end flex-wrap text-light p-5">
+                <p>${player.playerName}は大富豪になる夢を諦めた。だが、懸命に働いた結果、ハンバーガーショップは繁盛し、今やストリートで一番の店になった。
+                <br>店を始めたときから来てくれていた常連客と結婚し、来月には子供もできる予定だ。
+                <br>かつて夢に見ていた贅沢な生活はできないかもしれないが、地に足ついた幸福を享受できることもまた、贅沢なのかもしれない...。
+                </p>
+            </div>
+            <h6 class="text-light text-center">エンディング１：一般市民エンド</h6>
+        </div>
+        `;
+    }
+    container.querySelector(".box").append(drawTwoBtns("Go back", "Reset"));
+    container.querySelector(".btn-container").classList.add("my-5");
+    container.querySelectorAll(".btn-1")[0].addEventListener("click", function(){
+        //GoBackボタンが押されたときの処理
+        displayNone(container);
+        config.mainPage.append(drawMainPage(player));
+        displayBlock(config.mainPage);
+        startGame(player);
+    });
+    container.querySelectorAll(".btn-2")[0].addEventListener("click", function(){
+        //Resetボタンが押された時の処理
+        localStorage.removeItem(`${player.playerName}`);
+        config.endingPage.innerHTML = ``;
+        displayNone(config.endingPage);
+        displayBlock(config.loginPage);
+    })
     return container;
 }
