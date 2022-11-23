@@ -153,8 +153,8 @@ function loadPlayer(){
 function drawMainPage(player){
     let container = document.createElement("div");
     container.innerHTML = `
-    <div class="vh-100 d-md-flex justify-content-center container">
-        <div class="bg-secondary col-md-11 col-12 d-md-flex p-5 m-4">
+    <div class="vh-100 d-md-flex justify-content-center container ">
+        <div class="bg-secondary col-md-11 col-12 d-md-flex p-5 m-md-4 ">
             <div class="col-md-5 col-12 m-md-2 p-1 px-3 bg-dark" id="mainPageLeft">
                 <div class="text-center my-3 bg-secondary p-2 text-light">
                     <h5 id="numberOfBurger">${player.clicking} Burgers</h5>
@@ -175,10 +175,10 @@ function drawMainPage(player){
                         <h5 class="col-md-6 col-12 bg-secondary mx-1" id="totalmoney">$${player.money}</h5>
                     </div>
                 </div>
-                <div class="scroll my-3 bg-dark">
+                <div class="scroll my-2 bg-dark">
                     <div id="items"></div>    
                 </div>
-                <div class="save-reset m-4">
+                <div class="save-reset">
                 </div>
             </div>
         </div>
